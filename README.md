@@ -1,5 +1,9 @@
 # @storybook/addon-queryparams
 
+> [!NOTE]
+> This addon is now community-maintained. It was previously maintained by the Storybook team.
+
+
 This Storybook addon can be helpful if your components need special query parameters to work the way you want them to. It allows you to mock query params per story so that you can easily reproduce different states of your component.
 
 ## Getting started
