@@ -1,7 +1,7 @@
-import type { DecoratorFunction } from "storybook/internal/types";
-import { useParameter } from "storybook/preview-api";
+import type { DecoratorFunction } from 'storybook/internal/types';
+import { useParameter } from 'storybook/preview-api';
 
-import { PARAM_KEY } from "./constants";
+import { PARAM_KEY } from './constants';
 
 export const withQuery: DecoratorFunction = (StoryFn) => {
   const parameters = useParameter(PARAM_KEY, null);
@@ -9,10 +9,7 @@ export const withQuery: DecoratorFunction = (StoryFn) => {
   const currentQuery = new URLSearchParams(location.search);
 
   if (parameters) {
-    const additionalQuery =
-      typeof parameters === "string"
-        ? new URLSearchParams(parameters)
-        : parameters;
+    const additionalQuery = typeof parameters === 'string' ? new URLSearchParams(parameters) : parameters;
 
     const newLocation = new URL(document.location.href);
     newLocation.search = new URLSearchParams({
