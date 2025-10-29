@@ -3,7 +3,6 @@
 > [!NOTE]
 > This addon is now community-maintained. It was previously maintained by the Storybook team.
 
-
 This Storybook addon can be helpful if your components need special query parameters to work the way you want them to. It allows you to mock query params per story so that you can easily reproduce different states of your component.
 
 ## Getting started
@@ -16,16 +15,17 @@ $ npx storybook@latest add @storybook/addon-queryparams
 
 In your story, define the query parameters you want to mock via the `query` special parameter:
 
-```ts
-import React from "react";
-import { Button } from "../Button";
+```tsx
+// src/stories/Button.stories.tsx
+import React from 'react';
+import { Button } from '../Button';
 
 export default {
   component: Button,
   parameters: {
     query: {
       // example of mocking ?greeting="Hello world!"
-      greeting: "Hello world!",
+      greeting: 'Hello world!',
     },
   },
 };
@@ -33,10 +33,25 @@ export default {
 export const WithMockedSearch = {
   render: () => {
     const urlParams = new URLSearchParams(document.location.search);
-    const mockedParam = urlParams.get("greeting");
+    const mockedParam = urlParams.get('greeting');
     return <div>Mocked value: {mockedParam}</div>;
-  }
-}
+  },
+};
+```
+
+## CSF Next support
+
+For CSF Next annotations, import the addon in your `preview.ts`:
+
+```ts
+// .storybook/preview.ts
+import { definePreview } from '@storybook/your-framework';
+import addonDocs from '@storybook/addon-docs';
+import addonQueryParams from '@storybook/addon-queryparams';
+
+export default definePreview({
+  addons: [addonDocs(), addonQueryParams()],
+});
 ```
 
 ## Credits
