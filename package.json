@@ -62,7 +62,7 @@
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "^9.36.0",
     "@storybook/addon-docs": "next",
-    "@storybook/icons": "^1.4.0",
+    "@storybook/icons": "^2.0.0",
     "@storybook/react-vite": "next",
     "@types/node": "^20",
     "@types/react": "^18.2.65",
@@ -93,7 +93,7 @@
     "zx": "^8.7.1"
   },
   "peerDependencies": {
-    "storybook": "^10"
+    "storybook": "^10.0.0"
   },
   "publishConfig": {
     "access": "public"

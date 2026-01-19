@@ -26,8 +26,8 @@ importers:
         specifier: next
         version: 10.0.0-rc.2(@types/react@18.3.26)(esbuild@0.25.11)(rollup@4.52.5)(storybook@10.0.0-rc.2(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@7.1.12(@types/node@20.19.23)(jiti@2.6.1)(yaml@2.8.1)))(vite@7.1.12(@types/node@20.19.23)(jiti@2.6.1)(yaml@2.8.1))
       '@storybook/icons':
-        specifier: ^1.4.0
-        version: 1.6.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^2.0.0
+        version: 2.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@storybook/react-vite':
         specifier: next
         version: 10.0.0-rc.2(esbuild@0.25.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.52.5)(storybook@10.0.0-rc.2(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@7.1.12(@types/node@20.19.23)(jiti@2.6.1)(yaml@2.8.1)))(typescript@5.9.3)(vite@7.1.12(@types/node@20.19.23)(jiti@2.6.1)(yaml@2.8.1))
@@ -898,6 +898,12 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
+
+  '@storybook/icons@2.0.1':
+    resolution: {integrity: sha512-/smVjw88yK3CKsiuR71vNgWQ9+NuY2L+e8X7IMrFjexjm6ZR8ULrV2DRkTA61aV6ryefslzHEGDInGpnNeIocg==, tarball: https://registry.npmjs.org/@storybook/icons/-/icons-2.0.1.tgz}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   '@storybook/react-dom-shim@10.0.0-rc.2':
     resolution: {integrity: sha512-pRXZG2nxeaE6+tYpskJn+0s6a/m4V1n2BrtxbTaX0J4n1PDfQz+kC6yYCD1QCOgBUokarKYW044uJyuo9Y583Q==, tarball: https://registry.npmjs.org/@storybook/react-dom-shim/-/react-dom-shim-10.0.0-rc.2.tgz}
@@ -4887,6 +4893,11 @@ snapshots:
   '@storybook/global@5.0.0': {}
 
   '@storybook/icons@1.6.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@storybook/icons@2.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
