@@ -6,7 +6,7 @@ const meta = preview.meta({
   component: () => {
     const urlParams = new URLSearchParams(document.location.search);
     const mockedParam = urlParams.get('mock');
-    return <div>Mocked value: {mockedParam}</div>;
+    return <div>Mocked value: {String(mockedParam)}</div>;
   },
   parameters: {
     query: {
@@ -16,3 +16,12 @@ const meta = preview.meta({
 });
 
 export const Playground = meta.story({});
+
+export const ClearedParam = meta.story({
+  parameters: {
+    query: {
+      // `null` removes a parameter, even one set at the meta level, so this story renders "null".
+      mock: null,
+    },
+  },
+});

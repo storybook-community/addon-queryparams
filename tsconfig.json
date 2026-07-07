@@ -20,5 +20,5 @@
     "rootDir": ".",
     "ignoreDeprecations": "6.0"
   },
-  "include": ["src/**/*", "tsup.config.ts"]
+  "include": ["src/**/*", ".storybook/**/*", "tsup.config.ts", "vite.config.ts"]
 }

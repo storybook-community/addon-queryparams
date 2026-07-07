@@ -56,7 +56,9 @@
     "release:canary": "pnpm build && auto canary",
     "start": "run-p build:watch \"storybook --quiet\"",
     "storybook": "storybook dev -p 6006",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^20.5.0",
@@ -77,6 +79,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-storybook": "next",
     "husky": "^9.1.7",
+    "jsdom": "^29.1.1",
     "lint-staged": "^16.4.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.8.1",
@@ -90,6 +93,7 @@
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.57.2",
     "vite": "^8.0.5",
+    "vitest": "^4.1.10",
     "zx": "^8.7.1"
   },
   "peerDependencies": {

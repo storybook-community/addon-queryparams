@@ -39,6 +39,36 @@ export const WithMockedSearch = {
 };
 ```
 
+The `query` parameter accepts either an object or a query string (`'greeting=Hello world!&page=2'`). Object values may be strings, numbers or booleans, which are stringified into the URL.
+
+The query parameters are applied before the story renders, and the URL is restored to its previous state when you navigate away from the story, so parameters never leak from one story to the next.
+
+### Clearing query parameters
+
+Set a parameter to `null` to remove it from the URL instead of setting it. This is useful to clear a parameter that is defined at the meta or preview level:
+
+```tsx
+export const WithoutGreeting = {
+  parameters: {
+    query: {
+      // removes ?greeting even if it is set at the meta level
+      greeting: null,
+    },
+  },
+};
+```
+
+> [!TIP]
+> `undefined` values are treated like `null`, but prefer `null` for overrides: Storybook drops `undefined` values when merging parameters, so they cannot override a value defined at another level.
+
+### Reserved query parameters
+
+Storybook uses the `path`, `id`, `viewMode`, `args`, `globals`, `refId`, `instrument`, `navigator` and `__SPECIAL_TEST_PARAMETER__` query parameters internally in the preview URL. To avoid breaking story selection and args syncing, the addon ignores these keys and logs a warning if your stories try to set or clear them. All other query parameters are left exactly as they are, byte for byte.
+
+### Usage with the Vitest addon
+
+Query parameters are applied through a [`beforeEach` hook](https://storybook.js.org/docs/writing-stories/mocking-data-and-modules/mocking-modules#setting-up-and-cleaning-up), which also runs when stories are executed as portable stories, e.g. with the [Vitest addon](https://storybook.js.org/docs/writing-tests/integrations/vitest-addon). Play functions can therefore rely on the mocked query parameters in both Storybook and Vitest runs.
+
 ## CSF Next support
 
 For CSF Next annotations, import the addon in your `preview.ts`:

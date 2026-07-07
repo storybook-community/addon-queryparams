@@ -48,3 +48,30 @@ jobs:
         run: pnpm install
       - name: Run build
         run: pnpm build
+      - name: Check types
+        run: pnpm typecheck
+      - name: Check preview annotations entry
+        # Storybook auto-loads the addon through the "./preview" export; make sure it stays intact.
+        run: node -e "import('./dist/preview.js').then((m) => { if (typeof m.beforeEach !== 'function') { throw new Error('dist/preview.js must export a beforeEach hook'); } })"
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run tests
+        run: pnpm test
