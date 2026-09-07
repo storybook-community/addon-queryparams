@@ -14,8 +14,7 @@ let pendingCleanups: CleanupCallback[] = [];
 
 const runHook = (query?: QueryParams) => {
   const cleanup = preview.beforeEach({ parameters: { query } } as unknown as StoryContext) as
-    | CleanupCallback
-    | undefined;
+    CleanupCallback | undefined;
   if (cleanup) {
     pendingCleanups.push(cleanup);
   }
