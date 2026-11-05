@@ -41,7 +41,7 @@ jobs:
         run: pnpm install --ignore-scripts
 
       - name: Audit dependencies
-        run: pnpm audit
+        run: pnpm audit --audit-level high
 
       - name: Create production release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
