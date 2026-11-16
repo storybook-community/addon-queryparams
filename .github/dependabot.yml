@@ -17,3 +17,15 @@ updates:
     ignore:
       - dependency-name: '@storybook/*'
       - dependency-name: 'storybook'
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    assignees:
+      - 'sidnioulz'
+    reviewers:
+      - 'sidnioulz'
+    groups:
+      actions:
+        patterns:
+          - '*'

@@ -7,20 +7,38 @@ This Storybook addon can be helpful if your components need special query parame
 
 ## Getting started
 
-First, install the addon.
+Run the following command to install the addon and register it in your Storybook configuration:
 
 ```sh
-$ npx storybook@latest add @storybook/addon-queryparams
+npx storybook add @storybook/addon-queryparams
+```
+
+Then, register the addon's preview annotations in `.storybook/preview.ts`. Stories written with [CSF 4](https://storybook.js.org/docs/writing-stories/csf), the default story format since Storybook 11, get a type-checked `query` parameter this way. If the `storybook add` command already added an `import * as ... from '@storybook/addon-queryparams/preview'` entry to the `addons` array, replace it with the `addonQueryParams()` call shown below so that TypeScript knows about the `query` parameter:
+
+```ts
+// .storybook/preview.ts
+
+// Replace your-framework with the framework you are using (e.g., react-vite, nextjs-vite)
+import { definePreview } from '@storybook/your-framework';
+import addonDocs from '@storybook/addon-docs';
+import addonQueryParams from '@storybook/addon-queryparams';
+
+export default definePreview({
+  // ...rest of preview
+  addons: [addonDocs(), addonQueryParams()], // 👈 register the addon here
+});
 ```
 
 In your story, define the query parameters you want to mock via the `query` special parameter:
 
 ```tsx
 // src/stories/Button.stories.tsx
+import preview from '#.storybook/preview';
 import React from 'react';
+
 import { Button } from '../Button';
 
-export default {
+const meta = preview.meta({
   component: Button,
   parameters: {
     query: {
@@ -28,16 +46,18 @@ export default {
       greeting: 'Hello world!',
     },
   },
-};
+});
 
-export const WithMockedSearch = {
+export const WithMockedSearch = meta.story({
   render: () => {
     const urlParams = new URLSearchParams(document.location.search);
     const mockedParam = urlParams.get('greeting');
     return <div>Mocked value: {mockedParam}</div>;
   },
-};
+});
 ```
+
+The `query` parameter works the same way in CSF 3 stories (`export default { component: Button, parameters: { query: { ... } } }`).
 
 The `query` parameter accepts either an object or a query string (`'greeting=Hello world!&page=2'`). Object values may be strings, numbers or booleans, which are stringified into the URL.
 
@@ -48,14 +68,14 @@ The query parameters are applied before the story renders, and the URL is restor
 Set a parameter to `null` to remove it from the URL instead of setting it. This is useful to clear a parameter that is defined at the meta or preview level:
 
 ```tsx
-export const WithoutGreeting = {
+export const WithoutGreeting = meta.story({
   parameters: {
     query: {
       // removes ?greeting even if it is set at the meta level
       greeting: null,
     },
   },
-};
+});
 ```
 
 > [!TIP]
@@ -69,20 +89,9 @@ Storybook uses the `path`, `id`, `viewMode`, `args`, `globals`, `refId`, `instru
 
 Query parameters are applied through a [`beforeEach` hook](https://storybook.js.org/docs/writing-stories/mocking-data-and-modules/mocking-modules#setting-up-and-cleaning-up), which also runs when stories are executed as portable stories, e.g. with the [Vitest addon](https://storybook.js.org/docs/writing-tests/integrations/vitest-addon). Play functions can therefore rely on the mocked query parameters in both Storybook and Vitest runs.
 
-## CSF Next support
+## Compatibility
 
-For CSF Next annotations, import the addon in your `preview.ts`:
-
-```ts
-// .storybook/preview.ts
-import { definePreview } from '@storybook/your-framework';
-import addonDocs from '@storybook/addon-docs';
-import addonQueryParams from '@storybook/addon-queryparams';
-
-export default definePreview({
-  addons: [addonDocs(), addonQueryParams()],
-});
-```
+Each major version of the addon targets the matching major version of Storybook. Version 11 of the addon requires Storybook 11; see [MIGRATION.md](./MIGRATION.md) for details and for the changes between earlier versions.
 
 ## Credits
 
