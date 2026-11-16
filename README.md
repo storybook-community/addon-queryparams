@@ -13,7 +13,17 @@ Run the following command to install the addon and register it in your Storybook
 npx storybook add @storybook/addon-queryparams
 ```
 
-Then, register the addon's preview annotations in `.storybook/preview.ts`. Stories written with [CSF 4](https://storybook.js.org/docs/writing-stories/csf), the default story format since Storybook 11, get a type-checked `query` parameter this way. If the `storybook add` command already added an `import * as ... from '@storybook/addon-queryparams/preview'` entry to the `addons` array, replace it with the `addonQueryParams()` call shown below so that TypeScript knows about the `query` parameter:
+Stories written with [CSF 4](https://storybook.js.org/docs/writing-stories/csf), the default story format since Storybook 11, will now get a type-checked `query` parameter.
+
+### Manual install
+
+First install the dependency:
+
+```sh
+npm i -D @storybook/addon-queryparams
+```
+
+Then, register `addonQueryParams()` so that TypeScript knows about the `query` parameter:
 
 ```ts
 // .storybook/preview.ts
@@ -28,6 +38,8 @@ export default definePreview({
   addons: [addonDocs(), addonQueryParams()], // 👈 register the addon here
 });
 ```
+
+## Usage
 
 In your story, define the query parameters you want to mock via the `query` special parameter:
 
@@ -56,8 +68,6 @@ export const WithMockedSearch = meta.story({
   },
 });
 ```
-
-The `query` parameter works the same way in CSF 3 stories (`export default { component: Button, parameters: { query: { ... } } }`).
 
 The `query` parameter accepts either an object or a query string (`'greeting=Hello world!&page=2'`). Object values may be strings, numbers or booleans, which are stringified into the URL.
 
@@ -88,10 +98,6 @@ Storybook uses the `path`, `id`, `viewMode`, `args`, `globals`, `refId`, `instru
 ### Usage with the Vitest addon
 
 Query parameters are applied through a [`beforeEach` hook](https://storybook.js.org/docs/writing-stories/mocking-data-and-modules/mocking-modules#setting-up-and-cleaning-up), which also runs when stories are executed as portable stories, e.g. with the [Vitest addon](https://storybook.js.org/docs/writing-tests/integrations/vitest-addon). Play functions can therefore rely on the mocked query parameters in both Storybook and Vitest runs.
-
-## Compatibility
-
-Each major version of the addon targets the matching major version of Storybook. Version 11 of the addon requires Storybook 11; see [MIGRATION.md](./MIGRATION.md) for details and for the changes between earlier versions.
 
 ## Credits
 
