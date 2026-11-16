@@ -1,6 +1,6 @@
 import { defineConfig, type Options } from 'tsup';
 
-const NODE_TARGET = 'node20.19'; // Minimum Node version supported by Storybook 10
+const NODE_TARGET = 'node22.12'; // Minimum Node version supported by Storybook 11
 
 export default defineConfig(async () => {
   const packageJson = (await import('./package.json', { with: { type: 'json' } })).default;
@@ -42,7 +42,13 @@ export default defineConfig(async () => {
       entry: previewEntries,
       platform: 'browser',
       target: 'esnext', // we can use esnext for preview entries since the builders will bundle the addon's preview entries again anyway
-      dts: true,
+      dts: {
+        compilerOptions: {
+          // tsup injects the deprecated `baseUrl` option into its declaration build, which TypeScript 6 rejects
+          // unless the deprecation is silenced. Scoped here so tsconfig.json stays free of deprecated options.
+          ignoreDeprecations: '6.0',
+        },
+      },
     });
   }
 
