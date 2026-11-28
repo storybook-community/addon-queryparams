@@ -58,7 +58,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [22.12, 24.22]
+        # jsdom 31 (the test environment only) requires Node ^22.22.2; lint and build still cover Node 22.12.
+        node-version: [22.22, 24.22]
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
