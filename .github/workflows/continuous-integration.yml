@@ -74,5 +74,8 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install
-      - name: Run tests
+      - name: Install Playwright Chromium
+        # The story tests run in a real browser through @storybook/addon-vitest.
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Run unit and story tests
         run: pnpm test
