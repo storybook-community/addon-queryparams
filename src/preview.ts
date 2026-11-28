@@ -1,4 +1,4 @@
-import type { BeforeEach } from 'storybook/internal/types';
+import type { BeforeEach, StoryContext } from 'storybook/internal/types';
 import { once } from 'storybook/internal/client-logger';
 
 import { PARAM_KEY } from './constants';
@@ -13,6 +13,13 @@ import { PARAM_KEY } from './constants';
  * cannot override a value set at another level.
  */
 export type QueryParams = string | Record<string, string | number | boolean | null | undefined>;
+
+/**
+ * The `query` parameter of a story: query parameters, or a function that returns them. The function
+ * is called with the story context right before the story renders, so the query parameters can
+ * depend on the story's id, name, args or globals.
+ */
+export type QueryParamsParameter = QueryParams | ((context: StoryContext) => QueryParams | null | undefined);
 
 /**
  * Query parameters Storybook itself relies on in the preview URL. Overriding or deleting them
@@ -98,14 +105,19 @@ const replaceSearch = (segments: string[]): void => {
  * query parameter are preserved exactly. Running as a `beforeEach` hook (rather than a decorator)
  * makes the addon work in portable stories, e.g. when running stories with the Vitest addon.
  */
-export const beforeEach: BeforeEach = ({ parameters }) => {
-  const queryParams: QueryParams | undefined = parameters?.[PARAM_KEY];
-  if (!queryParams) {
+export const beforeEach: BeforeEach = (context) => {
+  const parameter: QueryParamsParameter | undefined = context.parameters?.[PARAM_KEY];
+  if (!parameter) {
     return;
   }
 
   // In DOM-less runtimes (e.g. portable stories in a node environment) there is no URL to mock.
   if (typeof window === 'undefined') {
+    return;
+  }
+
+  const queryParams = typeof parameter === 'function' ? parameter(context) : parameter;
+  if (!queryParams) {
     return;
   }
 

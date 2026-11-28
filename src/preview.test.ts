@@ -3,7 +3,7 @@ import type { CleanupCallback, StoryContext } from 'storybook/internal/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as preview from './preview';
-import type { QueryParams } from './preview';
+import type { QueryParamsParameter } from './preview';
 
 // The URL configured for jsdom in vite.config.ts.
 const BASE_URL = window.location.href;
@@ -12,8 +12,8 @@ const currentParams = () => new URLSearchParams(window.location.search);
 
 let pendingCleanups: CleanupCallback[] = [];
 
-const runHook = (query?: QueryParams) => {
-  const cleanup = preview.beforeEach({ parameters: { query } } as unknown as StoryContext) as
+const runHook = (query?: QueryParamsParameter, context: Partial<StoryContext> = {}) => {
+  const cleanup = preview.beforeEach({ ...context, parameters: { query } } as unknown as StoryContext) as
     CleanupCallback | undefined;
   if (cleanup) {
     pendingCleanups.push(cleanup);
@@ -197,6 +197,67 @@ describe('beforeEach', () => {
     } finally {
       warn.mockRestore();
     }
+  });
+
+  describe('with a function', () => {
+    it('applies the query parameters the function returns', () => {
+      runHook(() => ({ mock: 'Hello world from callback!' }));
+
+      expect(currentParams().get('mock')).toBe('Hello world from callback!');
+    });
+
+    it('calls the function with the story context', () => {
+      const query = vi.fn((context: StoryContext) => ({ story: context.name }));
+
+      runHook(query, { name: 'Playground' });
+
+      expect(query).toHaveBeenCalledTimes(1);
+      expect(query.mock.calls[0]?.[0]).toMatchObject({ name: 'Playground', parameters: { query } });
+      expect(currentParams().get('story')).toBe('Playground');
+    });
+
+    it('accepts a query string returned by the function', () => {
+      runHook(() => 'mock=from%20string&page=2');
+
+      expect(currentParams().get('mock')).toBe('from string');
+      expect(currentParams().get('page')).toBe('2');
+    });
+
+    it('removes parameters the function sets to null', () => {
+      history.replaceState(null, '', `${BASE_URL}&mock=existing`);
+
+      runHook(() => ({ mock: null }));
+
+      expect(currentParams().has('mock')).toBe(false);
+    });
+
+    it('leaves the URL alone and returns no cleanup when the function returns nothing', () => {
+      expect(runHook(() => undefined)).toBeUndefined();
+      expect(runHook(() => null)).toBeUndefined();
+      expect(window.location.href).toBe(BASE_URL);
+    });
+
+    it('ignores Storybook-internal parameters the function returns', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      try {
+        runHook((context) => ({ id: context.id, mock: '1' }), { id: 'other--story' });
+
+        expect(currentParams().get('id')).toBe('example-params--playground');
+        expect(currentParams().get('mock')).toBe('1');
+        expect(warn.mock.calls.flat().some((arg) => String(arg).includes('"id"'))).toBe(true);
+      } finally {
+        warn.mockRestore();
+      }
+    });
+
+    it('restores the URL on cleanup', () => {
+      const cleanup = runHook(() => ({ mock: 'Hello world!' }));
+
+      cleanup?.();
+
+      expect(window.location.href).toBe(BASE_URL);
+    });
   });
 
   describe('cleanup', () => {

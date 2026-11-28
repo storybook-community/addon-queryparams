@@ -73,6 +73,26 @@ The `query` parameter accepts either an object or a query string (`'greeting=Hel
 
 The query parameters are applied before the story renders, and the URL is restored to its previous state when you navigate away from the story, so parameters never leak from one story to the next.
 
+### Computing query parameters from the story
+
+The `query` parameter also accepts a function. The addon calls it with the story context right before the story renders, so the query parameters can depend on the story's `id`, `name`, `args` or `globals`. The function returns anything the `query` parameter accepts: an object, a query string, or `null`/`undefined` to leave the URL as it is.
+
+```tsx
+const meta = preview.meta({
+  component: Button,
+  parameters: {
+    query: (context) => ({
+      // example of mocking ?story=<story name>&greeting=Hello world!
+      story: context.name,
+      greeting: 'Hello world!',
+    }),
+  },
+});
+```
+
+> [!NOTE]
+> Storybook merges object values key by key across the preview, meta and story levels. Once any level sets a function, nothing is merged: the most specific level's value is used on its own. For example, a function at the meta level and an object at the story level gives the story's object alone.
+
 ### Clearing query parameters
 
 Set a parameter to `null` to remove it from the URL instead of setting it. This is useful to clear a parameter that is defined at the meta or preview level:
