@@ -48,9 +48,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm release
-
-      - name: Create canary release
-        if: github.event_name == 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm release:canary
